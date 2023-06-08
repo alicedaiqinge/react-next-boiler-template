@@ -1,2 +1,22 @@
-# react-next-boiler-template
-react, next.js, create order, etc
+This is a React project, using next.js, material UI, etc.
+
+## Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+
+## Test
+
+```bash
+npm test
+```
