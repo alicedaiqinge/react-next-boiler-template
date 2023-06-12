@@ -14,33 +14,58 @@ describe('OrderForm', () => {
         const mockedAxios = axios as jest.Mocked<typeof axios>;
 
         const mockOrderData = {
-            name: 'John Doe',
-            email: 'john@example.com',
-            address: '123 Street',
+            totalAmount: {
+                amount: '190.00',
+                currency: 'EUR'
+            },
+            consumer: {
+                phoneNumber: '0413323344',
+                givenNames: 'Joe',
+                surname: 'DD',
+                email: 'dd@gmail.com'
+            },
+            shipping: {
+                countryCode: 'it',
+                name: 'd',
+                postcode: 'dd',
+                suburb: 'dd',
+                line1: 'dd'
+            },
+            items: [
+                {
+                    quantity: 1,
+                    price: {
+                        amount: '10.00',
+                        currency: 'EUR'
+                    },
+                    name: 'dd',
+                    category: 'dd'
+                }
+            ],
+            sku: 'sku',
+            merchant: {
+                redirectCancelUrl: 'https://portal.integration.scalapay.com/failure-url',
+                redirectConfirmUrl: 'https://portal.integration.scalapay.com/success-url'
+            }
         };
 
-        mockedAxios.post.mockResolvedValueOnce({ data: { orderId: '123456' } });
+        const mockResponse = { url: 'https://portal.integration.scalapay.com/checkout/123456' };
+        mockedAxios.post.mockResolvedValueOnce({ data: mockResponse });
 
         render(<OrderForm />);
 
-        const nameInput = screen.getByLabelText('Name') as HTMLInputElement;
-        const emailInput = screen.getByLabelText('Email') as HTMLInputElement;
-        const addressInput = screen.getByLabelText('Address') as HTMLInputElement;
         const submitButton = screen.getByText('Submit');
-
-        fireEvent.change(nameInput, { target: { value: mockOrderData.name } });
-        fireEvent.change(emailInput, { target: { value: mockOrderData.email } });
-        fireEvent.change(addressInput, { target: { value: mockOrderData.address } });
-
         fireEvent.click(submitButton);
 
-        await waitFor(() => {
+        await waitFor(async () => {
             expect(mockedAxios.post).toHaveBeenCalledTimes(1);
             expect(mockedAxios.post).toHaveBeenCalledWith(
-                '/scalapay/createOrder',
+                'http://localhost:8080/scalapay/orders',
                 mockOrderData
             );
+            expect(mockedAxios.post).toHaveReturned();
         });
+
     });
 
 });
